@@ -39,7 +39,7 @@ Y = data_df.iloc[:,13].values
 sc = StandardScaler()
 X = sc.fit_transform(X)
 
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
 
 ###Random tree forest
 ###Model training
@@ -53,7 +53,7 @@ param_grid = {
 }
 
 # Khởi tạo Random Forest
-rf = RandomForestRegressor(random_state=42)
+rf = RandomForestRegressor()
 grid_rf = GridSearchCV(rf, param_grid, cv=5, scoring='neg_mean_squared_error')
 grid_rf.fit(X_train, Y_train)
 best_model_rf = grid_rf.best_estimator_
