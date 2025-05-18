@@ -15,9 +15,11 @@ from sklearn.model_selection import train_test_split
 ###Import data set
 data_df = pd.read_csv("https://raw.githubusercontent.com/leanguyen0124/web_deploy_3/refs/heads/main/gym_members_exercise_tracking.csv")
 
-data_df['Gender'] = data_df['Gender'].astype(str)
-data_df['Workout_Type'] = data_df['Workout_Type'].astype(str)
 categorical_columns = ['Gender', 'Workout_Type']
+numerical_columns = ['Age', 'Weight (kg)', 'Avg_BPM', 'Session_Duration (hours)', 'Workout_Frequency (days/week)', 'Experience_Level']
+
+X = data_df[categorical_columns + numerical_columns]
+y = data_df['Calories_Burned']
 
 preprocessor = ColumnTransformer(
     transformers=[
@@ -27,48 +29,32 @@ preprocessor = ColumnTransformer(
 )
 data_df= preprocessor.fit_transform(data_df)
 
-data_df = pd.DataFrame(
-    data_df,
-    columns = preprocessor.get_feature_names_out()
-)
-pd.set_option('display.float_format', lambda x: '%.2f' % x)
-
-X = data_df.iloc[:,0:13].values
-Y = data_df.iloc[:,13].values
-
 sc = StandardScaler()
 X = sc.fit_transform(X)
 
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+# Pipeline xử lý + model
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('cat', OneHotEncoder(), categorical_columns),
+        ('num', StandardScaler(), numerical_columns)
+    ]
+)
 
-###Random tree forest
-###Model training
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import GridSearchCV
-
-# Tập hợp các giá trị tham số cần thử
-param_grid = {
-    'n_estimators': [50, 100, 200],
-    'max_depth': [None, 10, 20]
-}
-
-# Khởi tạo Random Forest
-rf = RandomForestRegressor()
-grid_rf = GridSearchCV(rf, param_grid, cv=5, scoring='neg_mean_squared_error')
-grid_rf.fit(X_train, Y_train)
-best_model_rf = grid_rf.best_estimator_
-
-from sklearn.pipeline import Pipeline
-
-pipeline_1 = Pipeline(steps=[
-    ('preprocessing', preprocessor), 
-    ('chuẩn hóa',sc),
-    ('regressor', best_model_rf)
+pipeline = Pipeline(steps=[
+    ('preprocessing', preprocessor),
+    ('Scaler', sc),
+    ('regressor', RandomForestRegressor())
 ])
 
-joblib.dump(pipeline_1, 'model.pkl')
+# GridSearchCV
+param_grid = {
+    'regressor__n_estimators': [50,100,200],
+    'regressor__max_depth': [ None, 10, 20]
+}
+grid = GridSearchCV(pipeline, param_grid, cv=5)
+grid.fit(X, y)
 
-# Load model
+joblib.dump(grid.best_estimator_, 'model.pkl')
 model = joblib.load('model.pkl')
 
 # File lưu trữ lịch sử
