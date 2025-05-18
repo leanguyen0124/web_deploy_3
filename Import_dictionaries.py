@@ -60,13 +60,13 @@ best_model_rf = grid_rf.best_estimator_
 
 from sklearn.pipeline import Pipeline
 
-pipeline = Pipeline(steps=[
+pipeline_1 = Pipeline(steps=[
     ('preprocessing', preprocessor), 
     ('chuẩn hóa',sc),
-    ('regressor', best_model_rf.predict(X))
+    ('regressor', best_model_rf)
 ])
 
-joblib.dump(pipeline, 'model.pkl')
+joblib.dump(pipeline_1, 'model.pkl')
 
 # Load model
 model = joblib.load('model.pkl')
