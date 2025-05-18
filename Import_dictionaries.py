@@ -13,7 +13,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
 ###Import data set
-data_df = pd.read_csv("https://github.com/leanguyen0124/web_deploy_3/blob/main/gym_members_exercise_tracking.csv", error_bad_lines=False)
+data_df = pd.read_csv("https://raw.githubusercontent.com/leanguyen0124/web_deploy_3/refs/heads/main/gym_members_exercise_tracking.csv", error_bad_lines=False)
 
 data_df['Gender'] = data_df['Gender'].astype(str)
 data_df['Workout_Type'] = data_df['Workout_Type'].astype(str)
