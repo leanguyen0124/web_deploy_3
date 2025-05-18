@@ -89,7 +89,7 @@ with st.form("input_form"):
 
 if submitted:
     # Chuẩn bị dữ liệu cho mô hình
-    X = [['Age', 'Gender', 'Weight (kg)', 'Avg_BPM', 'Session_Duration (hours)', 'Workout_Type', 'Workout_Frequency (days/week)',  'Experience_Level']]
+    X = [[Age, Gender, Weight, Avg_BPM, Session_Duration, Workout_Type, Workout_Frequency, Experience_Level]]
     calories_pred = model.predict(X)[0]
     
     st.success(f"Bạn đã tiêu thụ khoảng: {calories_pred:.2f} calories")
