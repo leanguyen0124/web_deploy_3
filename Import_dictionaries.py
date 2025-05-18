@@ -21,28 +21,13 @@ numerical_columns = ['Age', 'Weight (kg)', 'Avg_BPM', 'Session_Duration (hours)'
 X = data_df[categorical_columns + numerical_columns]
 y = data_df['Calories_Burned']
 
-preprocessor = ColumnTransformer(
-    transformers=[
-        ('', OneHotEncoder(), categorical_columns)
-    ],
-    remainder='passthrough'  # giữ lại các cột còn lại (Age)
-)
-data_df= preprocessor.fit_transform(data_df)
-
-sc = StandardScaler()
-X = sc.fit_transform(X)
-
-# Pipeline xử lý + model
-preprocessor = ColumnTransformer(
-    transformers=[
-        ('cat', OneHotEncoder(), categorical_columns),
-        ('num', StandardScaler(), numerical_columns)
-    ]
-)
+preprocessor = ColumnTransformer(transformers=[
+    ('cat', OneHotEncoder(), categorical_cols),
+    ('num', StandardScaler(), numerical_cols)
+])
 
 pipeline = Pipeline(steps=[
     ('preprocessing', preprocessor),
-    ('Scaler', sc),
     ('regressor', RandomForestRegressor())
 ])
 
@@ -53,9 +38,8 @@ param_grid = {
 }
 grid = GridSearchCV(pipeline, param_grid, cv=5)
 grid.fit(X, y)
-
-joblib.dump(grid.best_estimator_, 'model.pkl')
-model = joblib.load('model.pkl')
+best_pipeline = grid_search.best_estimator_
+joblib.dump(best_pipeline, 'model.pkl')
 
 # File lưu trữ lịch sử
 DATA_FILE = 'workout_history.csv'
@@ -65,7 +49,7 @@ def load_data():
     if os.path.exists(DATA_FILE):
         return pd.read_csv(DATA_FILE, parse_dates=['date'])
     else:
-        return pd.DataFrame(columns=['Date','Age', 'Gender', 'Weight (kg)', 'Avg_BPM', 'Session_Duration (hours)', 'Workout_Type', 'Workout_Frequency (days/week)',  'Experience_Level', 'Calories_Burned'])
+        return pd.DataFrame(columns=['Date','Age', 'Gender', 'Weight (kg)', 'Avg_BPM', 'Session_Duration (hours)', 'Workout_Type', 'Workout_Frequency (days/week)', 'Experience_Level', 'Calories_Burned'])
 
 # Hàm lưu dữ liệu mới vào file
 def save_data(df):
