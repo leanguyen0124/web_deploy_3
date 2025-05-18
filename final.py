@@ -107,8 +107,8 @@ if submitted:
     
     st.success(f"Bạn đã tiêu thụ khoảng: {calories_pred:.2f} calories")
     # Lưu vào lịch sử
-        data = load_data()
-         new_record = {
+    data = load_data()
+    new_record = {
         'Date': datetime.datetime.now(),
         'Age': Age,
         'Gender' : Gender,
