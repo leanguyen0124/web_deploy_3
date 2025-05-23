@@ -15,7 +15,7 @@ import seaborn as sns
 
 
 ###Import data set
-data_df = pd.read_csv("C:/Users/admin/Downloads/gym_members_exercise_tracking.csv")
+data_df = pd.read_csv("https://raw.githubusercontent.com/leanguyen0124/web_deploy_3/refs/heads/main/gym_members_exercise_tracking.csv")
 pd.set_option('display.max_columns', None)
 print ('sample bộ data_set')
 print ( data_df.head() ) ## method head() lấy giá trị của 5 dòng đầu tiên của tập dữ liệu
