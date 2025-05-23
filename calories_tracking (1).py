@@ -551,7 +551,7 @@ with st.form("input_form"):
 # In[ ]:
 
 
-If submitted:
+if submitted:
     # Chuẩn bị dữ liệu cho mô hình
     X = [['Age', 'Gender', 'Weight (kg)', 'Avg_BPM', 'Session_Duration (hours)', 'Workout_Type', 'Workout_Frequency (days/week)',  'Experience_Level']]
     calories_pred = best_model_rf.predict(X)
